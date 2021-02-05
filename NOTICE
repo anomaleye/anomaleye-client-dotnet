@@ -1,0 +1,9 @@
+The Anomaleye (TM) client for .NET
+
+Copyright 2021 Alexander Venn Reidy
+Copyright 2021 AutoProctor, LLC
+
+Anomaleye (TM) is a service for regression testing and real-time monitoring and visualization that learns
+the behavior of your system and illuminates how the behavior changes from one version to the next.
+
+https://anomaleye.com
