@@ -17,10 +17,11 @@ namespace Anomaleye
             }
         }
 
-        public IAnomaleye CreateInstanceForRecordingSession(string systemVersionId, string recordingSessionId, IClock clock = null)
+        public IAnomaleye CreateInstanceForRecordingSession(string systemId, string systemVersionId, string recordingSessionId, IClock clock = null)
         {
             return new AnomaleyeImpl(
                 new AnomaleyeRestApiClient(this._apiBaseUrl, this._apiKey),
+                systemId,
                 systemVersionId,
                 recordingSessionId,
                 clock);

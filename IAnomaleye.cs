@@ -2,7 +2,7 @@ using System;
 
 namespace Anomaleye
 {
-    public interface IAnomaleye
+    public interface IAnomaleye : IDisposable
     {
         /// <summary>
         /// Enqueues the event to be shipped to the Anomaleye server.

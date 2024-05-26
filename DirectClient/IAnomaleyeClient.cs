@@ -9,6 +9,6 @@ namespace Anomaleye.DirectClient
     /// </summary>
     internal interface IAnomaleyeClient
     {
-        Task RecordEventsAsync(string systemVersionId, string recordingSessionId, List<EventRecord> events);
+        Task RecordEventsAsync(string systemId, string systemVersionId, string recordingSessionId, List<EventRecord> events);
     }
 }

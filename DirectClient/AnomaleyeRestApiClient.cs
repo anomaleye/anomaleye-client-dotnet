@@ -17,7 +17,7 @@ namespace Anomaleye.DirectClient
             this._httpClient.BaseAddress = new Uri(apiServerBaseUrl);
         }
 
-        public async Task RecordEventsAsync(string systemVersionId, string recordingSessionId, List<EventRecord> events)
+        public async Task RecordEventsAsync(string systemId, string systemVersionId, string recordingSessionId, List<EventRecord> events)
         {
             object requestBody = new
             {
@@ -29,7 +29,13 @@ namespace Anomaleye.DirectClient
                 System.Text.Encoding.UTF8,
                 "application/json");
             HttpResponseMessage response = await this._httpClient.PostAsync(
-                $"/public/system-version/{systemVersionId}/recording-session/{recordingSessionId}/events", requestContent);
+                $"public/systems/{systemId}/version/{systemVersionId}/recording-session/{recordingSessionId}/events", requestContent);
+            
+            if (response.StatusCode == System.Net.HttpStatusCode.UnprocessableEntity)
+            {
+                throw new Exception(await response.Content.ReadAsStringAsync());
+            }
+
             response.EnsureSuccessStatusCode();
         }
     }
