@@ -11,8 +11,6 @@ namespace Anomaleye
 {
     internal class AnomaleyeImpl : IAnomaleye
     {
-        // Blocking collection etc
-
         private IAnomaleyeClient _client;
         private string _systemId;
         private string _systemVersionId;
@@ -39,7 +37,6 @@ namespace Anomaleye
 
             this._stopToken = this._stopper.Token;
 
-            // TODO: dispose
             Task.Run(async () =>
             {
                 DateTime timeLastSentBatch = DateTime.UtcNow;
@@ -48,7 +45,6 @@ namespace Anomaleye
                 bool done = false;
                 while (batch.Count > 0 || !done)
                 {
-                    Console.WriteLine("poll coll again");
                     if (this._queue.TryTake(out EventRecord record, TimeSpan.FromSeconds(3)))
                     {
                         batch.Add(record);
@@ -61,11 +57,10 @@ namespace Anomaleye
                         }
                     }
 
-                    if (batch.Count != 0 && (batch.Count == 21 || DateTime.UtcNow - timeLastSentBatch > TimeSpan.FromSeconds(3)))
+                    if (batch.Count != 0 && (batch.Count == batch.Capacity || DateTime.UtcNow - timeLastSentBatch > TimeSpan.FromSeconds(3)))
                     {
                         try
                         {
-                            Console.WriteLine("sending batch");
                             // TODO: Give records GUIDs so we can retry and dedupe.
                             await this._client.RecordEventsAsync(this._systemId, this._systemVersionId, this._recordingSessionId, batch);
                             total += batch.Count;
@@ -82,10 +77,6 @@ namespace Anomaleye
                         timeLastSentBatch = DateTime.UtcNow;
                         batch.Clear();
                     }
-
-                            Console.WriteLine($"I have sent {total} events");
-                    
-
                 }
 
                 this._running = false;
@@ -107,7 +98,7 @@ namespace Anomaleye
                 Thread.Sleep(500);
             }
 
-            Console.WriteLine("Disposed");
+            Console.WriteLine("All done");
         }
 
         public void Log(string eventType, object eventDetails, DateTime? eventTimeUtc = null)
@@ -125,24 +116,6 @@ namespace Anomaleye
             };
 
             this._queue.Add(evt);
-
-            // Task.Run(async () =>
-            // {
-            //     for (int i = 0; i < 5; i++)
-            //     {
-            //         try
-            //         {
-            //             await this._client.RecordEventsAsync(this._systemId, this._systemVersionId, this._recordingSessionId, new List<EventRecord>(1) { evt });
-            //             break;
-            //         }
-            //         catch (Exception e)
-            //         {
-            //             Console.WriteLine(e);
-
-            //             await Task.Delay(TimeSpan.FromSeconds(7));
-            //         }
-            //     }
-            // });
         }
     }
 }

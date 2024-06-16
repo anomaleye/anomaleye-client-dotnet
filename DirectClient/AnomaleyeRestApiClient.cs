@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Anomaleye.DirectClient.Models;
 using Newtonsoft.Json;
@@ -15,6 +16,7 @@ namespace Anomaleye.DirectClient
         {
             this._httpClient = new HttpClient();
             this._httpClient.BaseAddress = new Uri(apiServerBaseUrl);
+            this._httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
         }
 
         public async Task RecordEventsAsync(string systemId, string systemVersionId, string recordingSessionId, List<EventRecord> events)
