@@ -4,7 +4,7 @@ namespace Anomaleye
 {
     public class AnomaleyeFactory
     {
-        private string _apiBaseUrl = "http://localhost:8080/public";
+        private string _apiBaseUrl = "https://anomaleye.com/public";
         private string _apiKey;
 
         public AnomaleyeFactory(string apiKey, string apiBaseUrl = null)
